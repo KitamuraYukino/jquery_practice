@@ -20,21 +20,17 @@ document.getElementById('q2').addEventListener('click',
 
 // Q1-3
 // クリックしてフェードアウト
-/*
-const q3 = document.querySelector('#q3.btn');
-q3.addEventListener('click', ()=>{
-  fadeOut(q3);
+$(function() {
+  $("#q3").on("click", function() {
+    $(this).fadeOut(3000);
+  });
 });
 
-function fadeOut(q3) {
-  let opacity =1;
-  const timer = setInterval(()=>{
-    if (opacity <= 0){
-      clearInterval(timer);
-      q3.style.display ='none';
-    }else {
-      q3.style.opacity = opacity;
-      opacity -= 0.1;
-    }
-  }, 3000);
-}*/
+// Q1-4
+// クリックしてサイズ変更
+$(function(){
+  $('#q4').on("click", function(){
+    $(this).width(250);
+    $(this).height(100);
+  });
+});
