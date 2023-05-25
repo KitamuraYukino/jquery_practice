@@ -38,6 +38,3 @@ function fadeOut(q3) {
     }
   }, 3000);
 }*/
-  document.querySelector('#q3.btn').onclick(function(){
-    this.fadeOut(3000);
-  });
