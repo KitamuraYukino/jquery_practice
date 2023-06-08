@@ -118,16 +118,21 @@ $(function () {
 // Q1-9
 // クリックして配列のアラートを表示
 $(function () {
-  $('#q9').children([]).on('click', function () {
-    let index = $('#q9').children([]).index(this);
+  // jQueryの実行
+  $('#q9').children().on('click', function () {
+  // id#q9を含む要素の子要素をクリックしたときに発生する
+    let index = $('#q9').children().index(this);
+  // q9の子要素の配列番号の取得
     alert(index);
+  // アラートの表示
   });
 });
 
 // Q1-10
 // Q10をクリックしてQ11を操作
 $(function(){
-  $('#q10').children([]).on('click', function(){
-    let index =$()
-  })
-})
+  $('#q10 li').on('click', function(){
+    let index = $(this).index();
+    $('#q11 li:nth-child('+ (index + 1) +')').css('font-size', '200%');
+  });
+});
