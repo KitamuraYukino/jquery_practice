@@ -131,8 +131,12 @@ $(function () {
 // Q1-10
 // Q10をクリックしてQ11を操作
 $(function(){
+    // jQueryの実行
   $('#q10 li').on('click', function(){
+    // id#q10を含む要素内のli要素をクリックしたときに発生する
     let index = $(this).index();
+    // id#q10を含む要素内のliのindexの取得
     $('#q11 li:nth-child('+ (index + 1) +')').css('font-size', '200%');
+    // id#q11の中のli要素の中でid#q10の順番と一致する要素に対して要素内のフォントサイズを200%に変更
   });
 });
