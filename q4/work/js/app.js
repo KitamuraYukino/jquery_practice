@@ -2,7 +2,7 @@
 // 同時にホームコンテンツにnav-hiddenを追加
 
 $(function () {
-  $('.nav-item').click(function () {
+  $('.nav-item').on('click', function () {
     let index = $(this).index();
 
     $('.description li').addClass('is-hidden');
