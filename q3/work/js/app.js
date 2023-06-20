@@ -27,8 +27,3 @@ $(function () {
   });
 });
 
-/*    $('.drawer_button').addClass('active');
-    $('.drawer_menu').addClass('right');
-    $('.drawer_nav_wrapper').addClass('open');
-    $('.drawer_bg').css('display', 'block').hide().fadeIn(500);
- */
