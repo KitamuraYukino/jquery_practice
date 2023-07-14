@@ -1,5 +1,8 @@
+//jQueryの実行
 $(function () {
+  //.btn__submitのクリック時に実行
   $('.btn__submit').on('click', function () {
+    //各要素の値を変数に代入
     let familyName = $('#family__name').val();
     let givenName = $('#given__Name').val();
     let year = $('.year').val();
@@ -13,11 +16,15 @@ $(function () {
     let duplicationPassword = $('#duplication__password').val();
     let address = $('#address').val();
     let tel = $('#tel').val();
+    //subscriptionというからの配列を作成
     let subscription = [];
+    //チェックされたチェックボックス要素の選択
     $('input[type="checkbox"]:checked').each(function () {
+      //チェックされたチェックボックスの要素の値をsubscriptionに渡す
       subscription.push($(this).val());
     });
 
+    //取得した要素と値をコンソールに表示
     console.log('名字');
     console.log(familyName);
     console.log('名前');
