@@ -37,12 +37,8 @@ $(function () {
   // jQueryの実行
   $('#q4').on("click", function () {
     // id#q4を含む要素がクリックされたときに発生する
-    $(this).width(300);
-    // 幅300pxに変更
-    $(this).height(75);
-    // 高さ75pxに変更
-    $(this).css('font-size', '125%')
-    // q4のフォントサイズを125％に変更
+    $(this).addClass('large');
+    // class[large]を追加
   });
 });
 
@@ -97,21 +93,13 @@ $(function () {
   // jQueryの実行
   $('#q8').hover(function () {
     // id#q8を含む要素のホバー時に発生する
-    $(this).css('font-size', '125%'),
-      // フォントサイズを125%に変更
-      $(this).width('300px'),
-      // 幅を300pxに変更
-      $(this).height('50px');
-    // 高さを50pxに変更
+    $(this).addClass('large');
+      //q8にclass[large]を追加
   },
     function () {
       // ホバーが離れた時の設定
-      $(this).css('font-size', ''),
-        // ホバーが離れたらフォントサイズを戻す
-        $(this).width(''),
-        // ホバーが離れたら幅を戻す
-        $(this).height('');
-      // ホバーが離れたら高さを戻す
+      $(this).removeClass('large');
+        // ホバーが離れたらclass[large]を除く
     });
 });
 
@@ -120,23 +108,23 @@ $(function () {
 $(function () {
   // jQueryの実行
   $('#q9').children().on('click', function () {
-  // id#q9を含む要素の子要素をクリックしたときに発生する
-    let index = $('#q9').children().index(this);
-  // q9の子要素の配列番号の取得
+    // id#q9を含む要素の子要素をクリックしたときに発生する
+    const index = $('#q9').children().index(this);
+    // q9の子要素の配列番号の取得
     alert(index);
-  // アラートの表示
+    // アラートの表示
   });
 });
 
 // Q1-10
 // Q10をクリックしてQ11を操作
-$(function(){
-    // jQueryの実行
-  $('#q10 li').on('click', function(){
+$(function () {
+  // jQueryの実行
+  $('#q10 li').on('click', function () {
     // id#q10を含む要素内のli要素をクリックしたときに発生する
-    let index = $(this).index();
+    const index = $(this).index();
     // id#q10を含む要素内のliのindexの取得
-    $('#q11 li:nth-child('+ (index + 1) +')').css('font-size', '200%');
-    // id#q11の中のli要素の中でid#q10の順番と一致する要素に対して要素内のフォントサイズを200%に変更
+    $('#q11 li:nth-child(' + (index + 1) + ')').addClass('large-text');
+    // id#q11の中のli要素の中でid#q10の順番と一致する要素に対してclass[large-text]を追加
   });
 });
