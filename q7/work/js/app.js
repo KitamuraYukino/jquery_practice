@@ -3,21 +3,21 @@ $(function () {
   //.btn__submitのクリック時に実行
   $('.btn__submit').on('click', function () {
     //各要素の値を変数に代入
-    let familyName = $('#family__name').val();
-    let givenName = $('#given__Name').val();
-    let year = $('.year').val();
-    let month = $('.month').val();
-    let day = $('.day').val();
-    let gender = $("input[name='gender']:checked").val();
-    let work = $('occupation').val();
-    let accountName = $('#account__name').val();
-    let email = $('#email').val();
-    let password = $('#password').val();
-    let duplicationPassword = $('#duplication__password').val();
-    let address = $('#address').val();
-    let tel = $('#tel').val();
+    const familyName = $('#family__name').val();
+    const givenName = $('#given__name').val();
+    const year = $('.year').val();
+    const month = $('.month').val();
+    const day = $('.day').val();
+    const gender = $("input[name='gender']:checked").val();
+    const work = $('.occupation').val();
+    const accountName = $('#account__name').val();
+    const email = $('#email').val();
+    const password = $('#password').val();
+    const duplicationPassword = $('#duplication__password').val();
+    const address = $('#address').val();
+    const tel = $('#tel').val();
     //subscriptionというからの配列を作成
-    let subscription = [];
+    const subscription = [];
     //チェックされたチェックボックス要素の選択
     $('input[type="checkbox"]:checked').each(function () {
       //チェックされたチェックボックスの要素の値をsubscriptionに渡す
