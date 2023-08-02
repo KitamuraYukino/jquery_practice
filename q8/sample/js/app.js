@@ -15,3 +15,8 @@ $(function () {
     })
   }); $(".reset-btn").on("click", function () { d = 1; f = ""; $(".lists").empty(); $(".message").remove(); $("#search-input").val("") })
 });
+
+//eは検索欄に入力された値
+//dはページカウント
+//fは検索ボタンを押したときの一つ前の検索ワード
+//bはAjaxによって返ってきたデータ
