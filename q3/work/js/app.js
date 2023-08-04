@@ -4,21 +4,22 @@ $(function () {
   //変数clickedにfalseを代入
   let clicked = false;
 
-//.drawer_buttonをクリックしたときに発生するイベント
-  $('.drawer_button').on('click', function () {
+  //.drawer_buttonまたは.drawer_bgをクリックしたときに発生するイベント
+  $('.drawer_button, .drawer_bg').on('click', function () {
     //1回目のクリックの場合
     if (!clicked) {
-    //以下3つのclassに疑似クラスを追加する
+      //以下3つのclassに疑似クラスを追加する
       $('.drawer_button').addClass('active');
       $('.drawer_menu').addClass('right');
       $('.drawer_nav_wrapper').addClass('open');
-    //.drawer_bg内のdisplayをblockに変更し要素を画した状態から0.5秒かけてフェードインさせる
+      //.drawer_bg内のdisplayをblockに変更し要素を画した状態から0.5秒かけてフェードインさせる
       $('.drawer_bg').css('display', 'block').hide().fadeIn(500);
       //clickedにtrueを再代入
       clicked = true;
-    //そうでない場合（2回目のクリックの際）
+      //そうでない場合（2回目のクリックの際）
+      console.log(clicked);
     } else {
-    //追加した3つの疑似クラスを除く
+      //追加した3つの疑似クラスを除く
       $('.drawer_button').removeClass('active');
       $('.drawer_menu').removeClass('right');
       $('.drawer_nav_wrapper').removeClass('open');
@@ -29,6 +30,7 @@ $(function () {
       });
       //clickedにfalseを再代入（初めの状態に戻す）
       clicked = false;
+      console.log(clicked);
     }
   });
 });
