@@ -49,36 +49,70 @@ $(function () {
     };
     console.log(settings.url);
 
+    //htmlを追加するための変数htmlを作成
+    let html = '';
+
+    //@graphのitemsのindex数
+    const len = result[0].items.length;
+
     //Ajaxを実行し設定情報（setting）を呼び出す
     $.ajax(settings).done(function (response) {
       //返ってきた情報の中の@graphのみ
       const result = response['@graph'];
       //@graphのみをコンソールに表示する
       console.log(result);
-      //@graphのitemsのindex数
-      const len = result[0].items.length;
-      console.log(len);
-      let html = '';
+
+      //結果を使ったループ処理
       for (let i = 0; i < len; i++) {
+        //著者の情報がundefindの場合は「作者（不明）」と表示
         if (typeof result[0].items[i]["dc:creator"] == 'undefined') {
           result[0].items[i]["dc:creator"] = '作者（不明）'
         }
+        //出版社の情報がundefindの場合は「出版社（不明）」と表示
         if (typeof result[0].items[i]["dc:publisher"] == 'undefined') {
           result[0].items[i]["dc:publisher"] = "出版社（不明）"
         }
+
+        //htmlに結果を追加
         html += `
-        <li class="lists_item">
+        <li class="lists-item">
 <div class="list-inner">
 <p>タイトル：${result[0].items[i].title}</p>
 <p>作者：${result[0].items[i]["dc:creator"]}</p>
 <p>出版社：${result[0].items[i]["dc:publisher"]}</p>
-<a href="" target="_blank">書籍情報</a>
+<a href=${result[0].items[i]["@id"]} target="_blank">書籍情報</a>
 </div>
 </li>
         `;
       }
+      //一度class[lists]を空にして、htmlを追加
       $('.lists').empty().prepend(html);
-    });
+
+      //失敗した場合
+    }).fail(function (err) {
+      //結果がない場合
+
+      html += `
+        <p class="message">正常に通信できませんでした。<br>
+        インターネットの接続の確認をしてください。</p>
+        `;
+
+      //一度class[lists]を空にして、htmlを追加
+      $('.inner').empty().prepend(html);
+
+      console.log('失敗');
+
+    })
+  });
+
+  //class[reset-btn]を押した際に発生するイベント
+  $('.reset-btn').on('click', function () {
+    //id[search-input]の中の値を空にする
+    $('#search-input').val('');
+    //pageCountを１にする
+    pageCount = 1;
+    //class[lists]の中の要素を空にする
+    $('.lists').empty();
   });
 });
 
@@ -101,13 +135,3 @@ $(function () {
 });
 */
 
-/*追加したいやつ
-<li class="lists_item">
-<div class="list-inner">
-<p>タイトル：</p>
-<p>作者：</p>
-<p>出版社：</p>
-<a href="" target="_blank">書籍情報</a>
-</div>
-</li>
-*/
