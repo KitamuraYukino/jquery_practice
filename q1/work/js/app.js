@@ -124,7 +124,7 @@ $(function () {
     // id#q10を含む要素内のli要素をクリックしたときに発生する
     const index = $(this).index();
     // id#q10を含む要素内のliのindexの取得
-    $('#q11 li:nth-child(' + (index + 1) + ')').addClass('large-text');
+    $('#q11 li').eq(index).addClass('large-text');
     // id#q11の中のli要素の中でid#q10の順番と一致する要素に対してclass[large-text]を追加
   });
 });
