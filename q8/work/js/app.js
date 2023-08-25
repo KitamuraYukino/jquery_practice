@@ -31,14 +31,29 @@ $(function () {
 });
 */
 
+
 $(function () {
+  //一つ前の検索ワードを入れるための変数用意
+  let previousWord = '';
+
+  //pageCountの初期値は1。
+  let pageCount = 1;
+
+
   $('.search-btn').on('click', function () {
+
+    //ボタンを押すときに検索欄に入っていた言葉をpreviousWordに代入
+    previousWord = $('#search-input').val();
     //入力した内容をsearchWordに代入
     let searchWord = $('#search-input').val();
     console.log(searchWord);
 
-    //pageCountの初期値は1。
-    let pageCount = 1;
+    //前と同じ言葉で検索したらページカウントを増やす
+    if (previousWord !== searchWord) {
+      pageCount = 1;
+      previousWord = searchWord;
+      $('.lists li').empty();
+    }
 
     //変数settingsに設定情報などを格納
     const settings = {
@@ -52,15 +67,16 @@ $(function () {
     //htmlを追加するための変数htmlを作成
     let html = '';
 
-    //@graphのitemsのindex数
-    const len = result[0].items.length;
-
     //Ajaxを実行し設定情報（setting）を呼び出す
     $.ajax(settings).done(function (response) {
       //返ってきた情報の中の@graphのみ
       const result = response['@graph'];
       //@graphのみをコンソールに表示する
       console.log(result);
+
+      //@graphのitemsのindex数
+      const len = result[0].items.length;
+
 
       //結果を使ったループ処理
       for (let i = 0; i < len; i++) {
@@ -75,18 +91,19 @@ $(function () {
 
         //htmlに結果を追加
         html += `
-        <li class="lists-item">
-<div class="list-inner">
-<p>タイトル：${result[0].items[i].title}</p>
-<p>作者：${result[0].items[i]["dc:creator"]}</p>
-<p>出版社：${result[0].items[i]["dc:publisher"]}</p>
-<a href=${result[0].items[i]["@id"]} target="_blank">書籍情報</a>
-</div>
-</li>
-        `;
+                <li class="lists-item">
+        <div class="list-inner">
+        <p>タイトル：${result[0].items[i].title}</p>
+        <p>作者：${result[0].items[i]["dc:creator"]}</p>
+        <p>出版社：${result[0].items[i]["dc:publisher"]}</p>
+        <a href=${result[0].items[i]["@id"]} target="_blank">書籍情報</a>
+        </div>
+        </li>
+                `;
       }
-      //一度class[lists]を空にして、htmlを追加
-      $('.lists').empty().prepend(html);
+
+      //class[lists]にhtmlを追加
+      $('.lists').prepend(html);
 
       //失敗した場合
     }).fail(function (err) {
@@ -102,7 +119,8 @@ $(function () {
 
       console.log('失敗');
 
-    })
+    });
+
   });
 
   //class[reset-btn]を押した際に発生するイベント
