@@ -37,8 +37,7 @@ $(function () {
   let previousWord = '';
 
   //pageCountの初期値は1。
-  let pageCount = 1;
-
+  let pageCount = 0;
 
   $('.search-btn').on('click', function () {
 
@@ -47,12 +46,15 @@ $(function () {
     //入力した内容をsearchWordに代入
     let searchWord = $('#search-input').val();
     console.log(searchWord);
+    console.log(previousWord);
 
     //前と同じ言葉で検索したらページカウントを増やす
     if (previousWord !== searchWord) {
-      pageCount = 1;
+      pageCount = 0;
       previousWord = searchWord;
-      $('.lists li').empty();
+      $('.lists').empty();
+    } else {
+      pageCount++;
     }
 
     //変数settingsに設定情報などを格納
@@ -65,7 +67,7 @@ $(function () {
     console.log(settings.url);
 
     //htmlを追加するための変数htmlを作成
-    let html = '';
+    let html
 
     //Ajaxを実行し設定情報（setting）を呼び出す
     $.ajax(settings).done(function (response) {
