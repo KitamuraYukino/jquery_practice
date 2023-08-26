@@ -67,7 +67,7 @@ $(function () {
     console.log(settings.url);
 
     //htmlを追加するための変数htmlを作成
-    let html
+    let html = '';
 
     //Ajaxを実行し設定情報（setting）を呼び出す
     $.ajax(settings).done(function (response) {
