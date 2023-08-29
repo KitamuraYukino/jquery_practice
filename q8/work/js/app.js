@@ -36,26 +36,31 @@ $(function () {
   //一つ前の検索ワードを入れるための変数用意
   let previousWord = '';
 
+  $('.search-input').change(function () {
+    previousWord = $(this).val();
+  });
   //pageCountの初期値は1。
   let pageCount = 0;
 
   $('.search-btn').on('click', function () {
 
     //ボタンを押すときに検索欄に入っていた言葉をpreviousWordに代入
-    previousWord = $('#search-input').val();
+    //previousWord = $('#search-input').val();
     //入力した内容をsearchWordに代入
     let searchWord = $('#search-input').val();
     console.log(searchWord);
     console.log(previousWord);
 
     //前と同じ言葉で検索したらページカウントを増やす
-    if (previousWord !== searchWord) {
-      pageCount = 0;
-      previousWord = searchWord;
-      $('.lists').empty();
+    if (previousWord === searchWord) {
+      pageCount++
+      //previousWord = searchWord;
     } else {
-      pageCount++;
+      pageCount = 0;
+      $('.lists').empty();
     }
+
+    previousWord = searchWord;
 
     //変数settingsに設定情報などを格納
     const settings = {
@@ -104,6 +109,11 @@ $(function () {
                 `;
       }
 
+      //もしlengthがundefindの場合はメッセージを追加
+      if (len = undefined) {
+        console.log('失敗');
+      };
+
       //class[lists]にhtmlを追加
       $('.lists').prepend(html);
 
@@ -117,10 +127,7 @@ $(function () {
         `;
 
       //一度class[lists]を空にして、htmlを追加
-      $('.inner').empty().prepend(html);
-
-      console.log('失敗');
-
+      $('.lists').empty().prepend(html);
     });
 
   });
@@ -129,8 +136,8 @@ $(function () {
   $('.reset-btn').on('click', function () {
     //id[search-input]の中の値を空にする
     $('#search-input').val('');
-    //pageCountを１にする
-    pageCount = 1;
+    //pageCountを0にする
+    pageCount = 0;
     //class[lists]の中の要素を空にする
     $('.lists').empty();
   });
