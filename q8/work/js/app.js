@@ -66,11 +66,11 @@ $(function () {
         for (let i = 0; i < len; i++) {
           //著者の情報がundefindの場合は「作者（不明）」と表示
           if (typeof result[0].items[i]["dc:creator"] == 'undefined') {
-            result[0].items[i]["dc:creator"] = '作者（不明）'
+            result[0].items[i]["dc:creator"] = '作者不明'
           }
           //出版社の情報がundefindの場合は「出版社（不明）」と表示
           if (typeof result[0].items[i]["dc:publisher"] == 'undefined') {
-            result[0].items[i]["dc:publisher"] = "出版社（不明）"
+            result[0].items[i]["dc:publisher"] = "出版社不明"
           }
 
           //htmlに結果を追加
