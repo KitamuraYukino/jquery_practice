@@ -1,35 +1,3 @@
-// API
-// const settings = {
-//   "url": `https://ci.nii.ac.jp/books/opensearch/search?title=${searchWord}&format=json&p=${pageCount}&count=20`,
-//   "method": "GET",
-// }
-// $.ajax(settings).done(function (response) {
-//   const result = response['@graph'];
-//   displayResult(result)
-// }).fail(function (err) {
-//   displayError(err)
-// });
-
-
-
-/*
-$(function () {
-  //「検索」をクリックしたときに発生するイベント
-  $('.search-btn').on('click', function () {
-    //Ajaxを実行し設定情報（setting）を呼び出す
-    $.ajax(settings)
-    //.doneが通信成功した時の処理、”response”が引数となっていて通信した結果を受け取っている
-      .done(function (response) {
-      //
-        console.log(response);
-      })
-    //.failが通信に失敗した時の処理、”err”にサーバーから送られてきたエラー内容を受け取っている。
-      .fail(function (err) {
-        console.error(err);
-      });
-  });
-});
-*/
 
 //jQueryの実行
 $(function () {
@@ -73,6 +41,9 @@ $(function () {
       method: "GET",
     };
 
+      //後で消す
+    console.log(settings.url);
+
     //htmlを追加するための変数htmlを作成
     let html = '';
 
@@ -80,6 +51,9 @@ $(function () {
     $.ajax(settings).done(function (response) {
       //返ってきた情報の中の@graphのみ
       const result = response['@graph'];
+
+      //後で消す
+      console.log(result);
 
       //返ってきた情報にresult[0].itemsを得られた場合
       if (result[0].items) {
