@@ -37,7 +37,7 @@ $(function () {
   let previousWord = '';
 
   //pageCountの初期値は1。
-  let pageCount = 0;
+  let pageCount = 1;
 
   $('.search-btn').on('click', function () {
 
@@ -50,11 +50,9 @@ $(function () {
 
     //前と同じ言葉で検索したらページカウントを増やす
     if (previousWord !== searchWord) {
-      pageCount = 0;
+      pageCount = 1;
       previousWord = searchWord;
       $('.lists').empty();
-    } else {
-      pageCount++;
     }
 
     //変数settingsに設定情報などを格納
@@ -81,7 +79,7 @@ $(function () {
 
 
       //結果を使ったループ処理
-      for (let i = 0; i < len; i++) {
+      for (let i = len-1; i >= 0; i--) {
 
         const creator = result[0].items[i]["dc:creator"];
         const publisher = result[0].items[i]["dc:publisher"];
@@ -111,6 +109,8 @@ $(function () {
 
       //class[lists]にhtmlを追加
       $('.lists').prepend(html);
+
+      pageCount++;
 
       //失敗した場合
     }).fail(function (err) {
