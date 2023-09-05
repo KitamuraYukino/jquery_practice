@@ -19,17 +19,13 @@ $(function () {
     let searchWord = $('#search-input').val();
 
     //前と同じ言葉で検索した場合
-    if (previousWord === searchWord) {
-      //pageCountを増やす
-      pageCount++
-
-      //別の場合（異なる言葉で検索した場合）
-    } else {
+    if (previousWord !== searchWord) {
       //pageCountを１に戻す
       pageCount = 1;
       //class[lists]の中を空にする
       $('.lists').empty();
     }
+
     //previousWordにsearchWordを代入する
     previousWord = searchWord;
 
@@ -41,7 +37,7 @@ $(function () {
       method: "GET",
     };
 
-      //後で消す
+    //後で消す
     console.log(settings.url);
 
     //htmlを追加するための変数htmlを作成
@@ -63,7 +59,7 @@ $(function () {
 
 
         //結果を使ったループ処理
-        for (let i = 0; i < len; i++) {
+        for (let i = len-1; i >= 0; i--) {
           //著者の情報がundefindの場合は「作者（不明）」と表示
           if (typeof result[0].items[i]["dc:creator"] == 'undefined') {
             result[0].items[i]["dc:creator"] = '作者不明'
@@ -88,6 +84,8 @@ $(function () {
 
         //class[lists]にhtmlを追加
         $('.lists').prepend(html);
+
+        pageCount++;
 
         //返ってきた情報にresult[0].itemsを得られなかった場合
       } else {
@@ -119,10 +117,16 @@ $(function () {
   $('.reset-btn').on('click', function () {
     //id[search-input]の中の値を空にする
     $('#search-input').val('');
-    //pageCountを0にする
-    pageCount = 0;
+    //pageCountを1にする
+    pageCount = 1;
     //class[lists]の中の要素を空にする
     $('.lists').empty();
   });
 });
 
+//else {
+      //pageCountを１に戻す
+      //pageCount = 1;
+      //class[lists]の中を空にする
+      //$('.lists').empty();
+    //}
