@@ -4,11 +4,6 @@ $(function () {
   //一つ前の検索ワードを入れるための変数
   let previousWord = '';
 
-  //class[search-input]に変化があったときに実行
-  $('.search-input').change(function () {
-    //previousWordにclass[search-input]に入っている値を代入
-    previousWord = $(this).val();
-  });
   //pageCountの初期値は1。
   let pageCount = 1;
 
@@ -18,16 +13,15 @@ $(function () {
     //入力した内容をsearchWordに代入
     let searchWord = $('#search-input').val();
 
-    //前と同じ言葉で検索した場合
+    //前と異なる言葉で検索した場合
     if (previousWord !== searchWord) {
       //pageCountを１に戻す
       pageCount = 1;
       //class[lists]の中を空にする
       $('.lists').empty();
+      //previousWordにsearchWordを代入する
+      previousWord = searchWord;
     }
-
-    //previousWordにsearchWordを代入する
-    previousWord = searchWord;
 
     //変数settingsに設定情報などを格納
     const settings = {
@@ -38,7 +32,7 @@ $(function () {
     };
 
     //後で消す
-    console.log(settings.url);
+    //console.log(settings.url);
 
     //htmlを追加するための変数htmlを作成
     let html = '';
@@ -49,35 +43,39 @@ $(function () {
       const result = response['@graph'];
 
       //後で消す
-      console.log(result);
+      //console.log(result);
 
       //返ってきた情報にresult[0].itemsを得られた場合
       if (result[0].items) {
 
         //@graphのitemsのindex数を取得する定数を定義
-        const len = result[0].items.length;
+        const resultItemsLength = result[0].items.length;
 
 
         //結果を使ったループ処理
-        for (let i = len - 1; i >= 0; i--) {
+        for (let i = resultItemsLength - 1; i >= 0; i--) {
 
           //変数[title]に結果の中のタイトルを代入
-          let title = result[0].items[i].title;
+          const title = result[0].items[i].title;
           //変数[creator]に結果の中の著者を代入
-          let creator = result[0].items[i]["dc:creator"];
+          const creator = result[0].items[i]["dc:creator"];
           //変数[publisher]に結果の中の出版社を代入
-          let publisher = result[0].items[i]["dc:publisher"];
+          const publisher = result[0].items[i]["dc:publisher"];
           //変数[title]に結果の中のタイトルを代入
-          let imfo = result[0].items[i]["@id"];
+          const itemsId = result[0].items[i]["@id"];
 
           //タイトルの情報がundefindの場合は「作者（不明）」と表示
-          title = typeof title !== 'undefined' ? title : 'タイトル不明';
+          typeof title !== 'undefined' ? title : 'タイトル不明';
+
           //著者の情報がundefindの場合は「作者不明」と表示
-          creator = typeof creator !== 'undefined' ? creator : '作者不明';
+          typeof creator !== 'undefined' ? creator : '作者不明';
+
           //出版社の情報がundefindの場合は「出版社不明」と表示
-          publisher = typeof publisher !== 'undefined' ? publisher : '出版社不明';
+          typeof publisher !== 'undefined' ? publisher : '出版社不明';
+
           //書籍情報の情報がundefindの場合は「書籍情報不明」と表示
-          imfo = typeof imfo !== 'undefined' ? imfo : '書籍情報不明';
+          typeof itemsId !== 'undefined' ? itemsId : '書籍情報不明';
+
 
           //htmlに結果を追加
           html += `
@@ -86,7 +84,7 @@ $(function () {
         <p>タイトル：${title}</p>
         <p>作者：${creator}</p>
         <p>出版社：${publisher}</p>
-        <a href=${imfo} target="_blank">書籍情報</a>
+        <a href=${itemsId} target="_blank">書籍情報</a>
         </div>
         </li>
         `;
@@ -125,18 +123,20 @@ $(function () {
 
   //class[reset-btn]を押した際に発生するイベント
   $('.reset-btn').on('click', function () {
+
     //id[search-input]の中の値を空にする
     $('#search-input').val('');
+
+    //previousWordをリセットする
+    previousWord = '';
+
     //pageCountを1にする
     pageCount = 1;
+
     //class[lists]の中の要素を空にする
     $('.lists').empty();
   });
 });
 
-//else {
-      //pageCountを１に戻す
-      //pageCount = 1;
-      //class[lists]の中を空にする
-      //$('.lists').empty();
-    //}
+//err
+//err_failed_400
