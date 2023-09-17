@@ -43,7 +43,7 @@ $(function () {
       const result = response['@graph'];
 
       //後で消す
-      //console.log(result);
+      console.log(result);
 
       //返ってきた情報にresult[0].itemsを得られた場合
       if (result[0].items) {
@@ -108,7 +108,10 @@ $(function () {
       }
 
       //class[search-input]の値が空のまま検索ボタンが押された場合
-    }).fail(function (err) {
+    }).fail(function (err,jqXHR, textStatus, errorThrown) {
+      console.log('エラー：' + jqXHR);
+      console.log('エラー：' + textStatus);
+      console.log('エラー：' + errorThrown);
 
       html += `
         <p class="message">正常に通信できませんでした。<br>
@@ -139,4 +142,5 @@ $(function () {
 });
 
 //err
-//err_failed_400
+//err_failed_400:検索欄を空欄のまま処理を行った
+//ERR_FAILED 301:Ajax実行時のURLにタイプミスがあった
