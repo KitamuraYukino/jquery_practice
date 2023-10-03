@@ -162,7 +162,7 @@ $(function () {
       //処理が失敗した場合
       function handleFailure() {
         console.log(err);
-        console.log('エラー：', err.status);
+        console.log(err.status);
 
         const errStatus = err.status;
 
