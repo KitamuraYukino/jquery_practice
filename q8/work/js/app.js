@@ -32,27 +32,28 @@ $(function () {
 */
 
 
+//jQueryの実行
 $(function () {
-  //一つ前の検索ワードを入れるための変数用意
+  //一つ前の検索ワードを入れるための変数
   let previousWord = '';
 
   //pageCountの初期値は1。
   let pageCount = 1;
 
+  //class[seach-btn]をクリックしたときに実行
   $('.search-btn').on('click', function () {
 
-    //ボタンを押すときに検索欄に入っていた言葉をpreviousWordに代入
-    previousWord = $('#search-input').val();
     //入力した内容をsearchWordに代入
-    let searchWord = $('#search-input').val();
-    console.log(searchWord);
-    console.log(previousWord);
+    const searchWord = $('#search-input').val();
 
-    //前と同じ言葉で検索したらページカウントを増やす
+    //前と異なる言葉で検索した場合
     if (previousWord !== searchWord) {
+      //pageCountを１に戻す
       pageCount = 1;
-      previousWord = searchWord;
+      //class[lists]の中を空にする
       $('.lists').empty();
+      //previousWordにsearchWordを代入する
+      previousWord = searchWord;
     }
 
     //変数settingsに設定情報などを格納
@@ -62,101 +63,122 @@ $(function () {
       //サーバーに送るメソッド
       method: "GET",
     };
-    console.log(settings.url);
 
-    //htmlを追加するための変数htmlを作成
-    let html = '';
+    //後で消す
+    //console.log(settings.url);
+
+    //処理成功時にhtmlを追加するための変数doneHtmlを作成
+    let doneHtml = '';
+
+    //処理失敗時にhtmlを追加するための変数failHtmlを作成
+    let failHtml = '';
 
     //Ajaxを実行し設定情報（setting）を呼び出す
     $.ajax(settings).done(function (response) {
       //返ってきた情報の中の@graphのみ
       const result = response['@graph'];
-      //@graphのみをコンソールに表示する
+
+      //後で消す
       console.log(result);
 
-      //@graphのitemsのindex数
-      const len = result[0].items.length;
+      //返ってきた情報にresult[0].itemsを得られた場合
+      if (result[0].items) {
+
+        //@graphのitemsのindex数を取得する定数を定義
+        const resultItemsLength = result[0].items.length;
 
 
-      //結果を使ったループ処理
-      for (let i = len-1; i >= 0; i--) {
+        //結果を使ったループ処理
+        for (let i = resultItemsLength - 1; i >= 0; i--) {
 
-        const creator = result[0].items[i]["dc:creator"];
-        const publisher = result[0].items[i]["dc:publisher"];
+          //変数[title]に結果の中のタイトルを代入
+          let title = result[0].items[i].title// !== 'undefined' ? title : 'タイトル不明';
+          //変数[creator]に結果の中の著者を代入
+          let creator = result[0].items[i]["dc:creator"];
+          //変数[publisher]に結果の中の出版社を代入
+          let publisher = result[0].items[i]["dc:publisher"];
+          //変数[title]に結果の中のタイトルを代入
+          let itemsId = result[0].items[i]["@id"];
+
+          //タイトルの情報がundefindの場合は「作者（不明）」と表示
+          title = typeof title !== 'undefined' ? title : 'タイトル不明';
+
+          //著者の情報がundefindの場合は「作者不明」と表示
+          creator = typeof creator !== 'undefined' ? creator : '作者不明';
+
+          //出版社の情報がundefindの場合は「出版社不明」と表示
+          publisher = typeof publisher !== 'undefined' ? publisher : '出版社不明';
+
+          //書籍情報の情報がundefindの場合は「書籍情報不明」と表示
+          itemsId = typeof itemsId !== 'undefined' ? itemsId : '書籍情報不明';
 
 
-        //著者の情報がundefindの場合は「作者（不明）」と表示
-        if (typeof result[0].items[i]["dc:creator"] == 'undefined') {
-          result[0].items[i]["dc:creator"] = '作者（不明）'
-        }
-        //出版社の情報がundefindの場合は「出版社（不明）」と表示
-        if (typeof result[0].items[i]["dc:publisher"] == 'undefined') {
-          result[0].items[i]["dc:publisher"] = "出版社（不明）"
-        }
-
-        //htmlに結果を追加
-        html += `
-                <li class="lists-item">
+          //htmlに結果を追加
+          doneHtml += `
+        <li class="lists-item">
         <div class="list-inner">
-        <p>タイトル：${result[0].items[i].title}</p>
-        <p>作者：${result[0].items[i]["dc:creator"]}</p>
-        <p>出版社：${result[0].items[i]["dc:publisher"]}</p>
-        <a href=${result[0].items[i]["@id"]} target="_blank">書籍情報</a>
+        <p>タイトル：${title}</p>
+        <p>作者：${creator}</p>
+        <p>出版社：${publisher}</p>
+        <a href=${itemsId} target="_blank">書籍情報</a>
         </div>
         </li>
-                `;
+        `;
+        }
+
+        //class[lists]にhtmlを追加
+        $('.lists').prepend(html);
+
+        pageCount++;
+
+        //返ってきた情報にresult[0].itemsを得られなかった場合
+      } else {
+        doneHtml += `
+        <p class="message">検索結果が見つかりませんでした。<br>
+        別のキーワードで検索して下さい。</p>
+        `;
+
+        //一度class[lists]を空にして、htmlを追加
+        $('.lists').empty().prepend(html);
+
       }
 
-      //class[lists]にhtmlを追加
-      $('.lists').prepend(html);
-
-      pageCount++;
-
-      //失敗した場合
+      //class[search-input]の値が空のまま検索ボタンが押された場合
     }).fail(function (err) {
-      //結果がない場合
 
-      html += `
+      console.log('エラー：', err);
+      console.log('エラー：', err.jqXHR);
+      console.log('エラー：', err.textStatus);
+      console.log('エラー：', err.errorThrown);
+
+      failHtml += `
         <p class="message">正常に通信できませんでした。<br>
         インターネットの接続の確認をしてください。</p>
         `;
 
       //一度class[lists]を空にして、htmlを追加
-      $('.inner').empty().prepend(html);
-
-      console.log('失敗');
-
+      $('.lists').empty().prepend(html);
     });
 
   });
 
   //class[reset-btn]を押した際に発生するイベント
   $('.reset-btn').on('click', function () {
+
     //id[search-input]の中の値を空にする
     $('#search-input').val('');
-    //pageCountを１にする
+
+    //previousWordをリセットする
+    previousWord = '';
+
+    //pageCountを1にする
     pageCount = 1;
+
     //class[lists]の中の要素を空にする
     $('.lists').empty();
   });
 });
 
-/*        html += `
-        <li class="lists_item">
-<div class="list-inner">
-<p>タイトル：${response[0].items[i].title}</p>
-<p>作者：${response[0].items[i]["dc:creator"]}</p>
-<p>出版社：${response[0].items[i]["dc:publisher"][i]}</p>
-<a href="" target="_blank">書籍情報</a>
-</div>
-</li>
-        `;
-      }
-    })
-      .fail(function (err) {
-        console.log(err);
-      })
-  });
-});
-*/
-
+//err
+//err_failed_400:検索欄を空欄のまま処理を行った
+//ERR_FAILED 301:Ajax実行時のURLにタイプミスがあった
