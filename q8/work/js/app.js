@@ -127,7 +127,7 @@ $(function () {
         }
 
         //class[lists]にhtmlを追加
-        $('.lists').prepend(html);
+        $('.lists').prepend(doneHtml);
 
         pageCount++;
 
@@ -139,7 +139,7 @@ $(function () {
         `;
 
         //一度class[lists]を空にして、htmlを追加
-        $('.lists').empty().prepend(html);
+        $('.lists').empty().prepend(doneHtml);
 
       }
 
@@ -147,17 +147,20 @@ $(function () {
     }).fail(function (err) {
 
       console.log('エラー：', err);
-      console.log('エラー：', err.jqXHR);
-      console.log('エラー：', err.textStatus);
-      console.log('エラー：', err.errorThrown);
+      console.log('エラー：', err.status);
 
-      failHtml += `
+      const errStatus = err.status;
+
+      errStatus !== '0'
+        ?
+        failHtml += `
         <p class="message">正常に通信できませんでした。<br>
         インターネットの接続の確認をしてください。</p>
-        `;
+        `
+        : false;
 
       //一度class[lists]を空にして、htmlを追加
-      $('.lists').empty().prepend(html);
+      $('.lists').empty().prepend(failHtml);
     });
 
   });
