@@ -146,6 +146,10 @@ $(function () {
   });
 });
 
+// $.ajax(settings)
+// .done(handleSuccess);
+// .fail(handleFailure);
+
 //err
 //err_failed_400:検索欄を空欄のまま処理を行った
 //ERR_FAILED 301:Ajax実行時のURLにタイプミスがあった
