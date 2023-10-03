@@ -34,8 +34,12 @@ $(function () {
     //後で消す
     //console.log(settings.url);
 
-    //htmlを追加するための変数htmlを作成
-    let html = '';
+    //処理成功時にhtmlを追加するための変数doneHtmlを作成
+    let doneHtml = '';
+
+    //処理失敗時にhtmlを追加するための変数failHtmlを作成
+    let failHtml = '';
+
 
     //Ajaxを実行し設定情報（setting）を呼び出す
     $.ajax(settings).done(function (response) {
@@ -78,7 +82,7 @@ $(function () {
 
 
           //htmlに結果を追加
-          html += `
+          doneHtml += `
         <li class="lists-item">
         <div class="list-inner">
         <p>タイトル：${title}</p>
@@ -91,37 +95,36 @@ $(function () {
         }
 
         //class[lists]にhtmlを追加
-        $('.lists').prepend(html);
+        $('.lists').prepend(doneHtml);
 
         pageCount++;
 
         //返ってきた情報にresult[0].itemsを得られなかった場合
       } else {
-        html += `
+        doneHtml += `
         <p class="message">検索結果が見つかりませんでした。<br>
         別のキーワードで検索して下さい。</p>
         `;
 
         //一度class[lists]を空にして、htmlを追加
-        $('.lists').empty().prepend(html);
+        $('.lists').empty().prepend(doneHtml);
 
       }
 
       //class[search-input]の値が空のまま検索ボタンが押された場合
     }).fail(function (err) {
+      const errStatus = err.status;
+      console.log(errStatus);
 
-      console.log('エラー：', err);
-      console.log('エラー：', err.jqXHR);
-      console.log('エラー：', err.textStatus);
-      console.log('エラー：', err.errorThrown);
-
-      html += `
+      errStatus !== '0'
+        ? failHtml += `
         <p class="message">正常に通信できませんでした。<br>
         インターネットの接続の確認をしてください。</p>
-        `;
+        `
+        : false;
 
       //一度class[lists]を空にして、htmlを追加
-      $('.lists').empty().prepend(html);
+      $('.lists').empty().prepend(failHtml);
     });
 
   });
