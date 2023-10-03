@@ -75,46 +75,59 @@ $(function () {
 
     //Ajaxを実行し設定情報（setting）を呼び出す
     $.ajax(settings).done(function (response) {
-      //返ってきた情報の中の@graphのみ
-      const result = response['@graph'];
-
-      //後で消す
-      console.log(result);
-
-      //返ってきた情報にresult[0].itemsを得られた場合
-      if (result[0].items) {
-
-        //@graphのitemsのindex数を取得する定数を定義
-        const resultItemsLength = result[0].items.length;
 
 
-        //結果を使ったループ処理
-        for (let i = resultItemsLength - 1; i >= 0; i--) {
+      $.ajax(settings).done(handleSuccess, function (response) {
+        //返ってきた情報の中の@graphのみ
+        const result = response['@graph'];
 
-          //変数[title]に結果の中のタイトルを代入
-          let title = result[0].items[i].title// !== 'undefined' ? title : 'タイトル不明';
-          //変数[creator]に結果の中の著者を代入
-          let creator = result[0].items[i]["dc:creator"];
-          //変数[publisher]に結果の中の出版社を代入
-          let publisher = result[0].items[i]["dc:publisher"];
-          //変数[title]に結果の中のタイトルを代入
-          let itemsId = result[0].items[i]["@id"];
+      }).fail(handleFailure, function(err){
+        console.log(err);
 
-          //タイトルの情報がundefindの場合は「作者（不明）」と表示
-          title = typeof title !== 'undefined' ? title : 'タイトル不明';
-
-          //著者の情報がundefindの場合は「作者不明」と表示
-          creator = typeof creator !== 'undefined' ? creator : '作者不明';
-
-          //出版社の情報がundefindの場合は「出版社不明」と表示
-          publisher = typeof publisher !== 'undefined' ? publisher : '出版社不明';
-
-          //書籍情報の情報がundefindの場合は「書籍情報不明」と表示
-          itemsId = typeof itemsId !== 'undefined' ? itemsId : '書籍情報不明';
+      });
 
 
-          //htmlに結果を追加
-          doneHtml += `
+
+      function handleSuccess() {
+        const result = response['@graph'];
+
+        //後で消す
+        console.log(result);
+
+        //返ってきた情報にresult[0].itemsを得られた場合
+        if (result[0].items) {
+
+          //@graphのitemsのindex数を取得する定数を定義
+          const resultItemsLength = result[0].items.length;
+
+
+          //結果を使ったループ処理
+          for (let i = resultItemsLength - 1; i >= 0; i--) {
+
+            //変数[title]に結果の中のタイトルを代入
+            let title = result[0].items[i].title// !== 'undefined' ? title : 'タイトル不明';
+            //変数[creator]に結果の中の著者を代入
+            let creator = result[0].items[i]["dc:creator"];
+            //変数[publisher]に結果の中の出版社を代入
+            let publisher = result[0].items[i]["dc:publisher"];
+            //変数[title]に結果の中のタイトルを代入
+            let itemsId = result[0].items[i]["@id"];
+
+            //タイトルの情報がundefindの場合は「作者（不明）」と表示
+            title = typeof title !== 'undefined' ? title : 'タイトル不明';
+
+            //著者の情報がundefindの場合は「作者不明」と表示
+            creator = typeof creator !== 'undefined' ? creator : '作者不明';
+
+            //出版社の情報がundefindの場合は「出版社不明」と表示
+            publisher = typeof publisher !== 'undefined' ? publisher : '出版社不明';
+
+            //書籍情報の情報がundefindの場合は「書籍情報不明」と表示
+            itemsId = typeof itemsId !== 'undefined' ? itemsId : '書籍情報不明';
+
+
+            //htmlに結果を追加
+            doneHtml += `
         <li class="lists-item">
         <div class="list-inner">
         <p>タイトル：${title}</p>
@@ -124,46 +137,51 @@ $(function () {
         </div>
         </li>
         `;
-        }
+          }
 
-        //class[lists]にhtmlを追加
-        $('.lists').prepend(doneHtml);
+          //class[lists]にhtmlを追加
+          $('.lists').prepend(doneHtml);
 
-        pageCount++;
+          pageCount++;
 
-        //返ってきた情報にresult[0].itemsを得られなかった場合
-      } else {
-        doneHtml += `
+          //返ってきた情報にresult[0].itemsを得られなかった場合
+        } else {
+          doneHtml += `
         <p class="message">検索結果が見つかりませんでした。<br>
         別のキーワードで検索して下さい。</p>
         `;
 
-        //一度class[lists]を空にして、htmlを追加
-        $('.lists').empty().prepend(doneHtml);
+          //一度class[lists]を空にして、htmlを追加
+          $('.lists').empty().prepend(doneHtml);
 
+        }
+
+        //class[search-input]の値が空のまま検索ボタンが押された場合
       }
 
-      //class[search-input]の値が空のまま検索ボタンが押された場合
-    }).fail(function (err) {
+      //処理が失敗した場合
+      function handleFailure() {
+        console.log(err);
+        console.log('エラー：', err.status);
 
-      console.log('エラー：', err);
-      console.log('エラー：', err.status);
+        const errStatus = err.status;
 
-      const errStatus = err.status;
-
-      errStatus !== '0'
-        ?
-        failHtml += `
+        errStatus !== '0'
+          ?
+          failHtml += `
         <p class="message">正常に通信できませんでした。<br>
         インターネットの接続の確認をしてください。</p>
         `
-        : false;
+          : false;
 
-      //一度class[lists]を空にして、htmlを追加
-      $('.lists').empty().prepend(failHtml);
+        //一度class[lists]を空にして、htmlを追加
+        $('.lists').empty().prepend(failHtml);
+      };
+
+
     });
-
   });
+
 
   //class[reset-btn]を押した際に発生するイベント
   $('.reset-btn').on('click', function () {
