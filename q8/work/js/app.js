@@ -11,7 +11,7 @@ $(function () {
   $('.search-btn').on('click', function () {
 
     //入力した内容をsearchWordに代入
-    let searchWord = $('#search-input').val();
+    const searchWord = $('#search-input').val();
 
     //前と異なる言葉で検索した場合
     if (previousWord !== searchWord) {
@@ -56,25 +56,25 @@ $(function () {
         for (let i = resultItemsLength - 1; i >= 0; i--) {
 
           //変数[title]に結果の中のタイトルを代入
-          const title = result[0].items[i].title;
+          let title = result[0].items[i].title// !== 'undefined' ? title : 'タイトル不明';
           //変数[creator]に結果の中の著者を代入
-          const creator = result[0].items[i]["dc:creator"];
+          let creator = result[0].items[i]["dc:creator"];
           //変数[publisher]に結果の中の出版社を代入
-          const publisher = result[0].items[i]["dc:publisher"];
+          let publisher = result[0].items[i]["dc:publisher"];
           //変数[title]に結果の中のタイトルを代入
-          const itemsId = result[0].items[i]["@id"];
+          let itemsId = result[0].items[i]["@id"];
 
           //タイトルの情報がundefindの場合は「作者（不明）」と表示
-          typeof title !== 'undefined' ? title : 'タイトル不明';
+          title = typeof title !== 'undefined' ? title : 'タイトル不明';
 
           //著者の情報がundefindの場合は「作者不明」と表示
-          typeof creator !== 'undefined' ? creator : '作者不明';
+          creator = typeof creator !== 'undefined' ? creator : '作者不明';
 
           //出版社の情報がundefindの場合は「出版社不明」と表示
-          typeof publisher !== 'undefined' ? publisher : '出版社不明';
+          publisher = typeof publisher !== 'undefined' ? publisher : '出版社不明';
 
           //書籍情報の情報がundefindの場合は「書籍情報不明」と表示
-          typeof itemsId !== 'undefined' ? itemsId : '書籍情報不明';
+          itemsId = typeof itemsId !== 'undefined' ? itemsId : '書籍情報不明';
 
 
           //htmlに結果を追加
