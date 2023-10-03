@@ -126,6 +126,9 @@ $(function () {
     //handleFailureの定義
     function handleFailure(err) {
 
+      //返ってきた引数errに含まれるstatusを定数errStatusに代入
+      const errStatus = err.status;
+
       //返ってきたerrのstatusが0の場合
       if (errStatus === 0) {
 
