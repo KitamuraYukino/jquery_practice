@@ -7,6 +7,8 @@ $(function () {
   //pageCountの初期値は1。
   let pageCount = 1;
 
+
+
   //class[seach-btn]をクリックしたときに実行
   $('.search-btn').on('click', function () {
 
@@ -32,11 +34,6 @@ $(function () {
     };
 
 
-    //処理成功時にhtmlを追加するための変数doneHtmlを作成
-    let doneHtml = '';
-
-    //処理失敗時にhtmlを追加するための変数failHtmlを作成
-    let failHtml = '';
 
     //ajaxの実行
     $.ajax(settings).done(function (response) {
@@ -51,120 +48,127 @@ $(function () {
       handleFailure(err);
     });
 
-    //handleSuccessの定義
-    function handleSuccess(response) {
-
-      //返ってきた情報の中の@graphのみ
-      const result = response['@graph'];
-
-      //返ってきた情報にresult[0].itemsを得られた場合
-      if (result[0].items) {
-
-        //@graphのitemsのindex数を取得する定数を定義
-        const resultItemsLength = result[0].items.length;
+  });//$('.search-btn').on('click', function () {　の終了
 
 
-        //結果を使ったループ処理
-        for (let i = resultItemsLength - 1; i >= 0; i--) {
-
-          //変数[title]に結果の中のタイトルを代入
-          let title = result[0].items[i].title// !== 'undefined' ? title : 'タイトル不明';
-          //変数[creator]に結果の中の著者を代入
-          let creator = result[0].items[i]["dc:creator"];
-          //変数[publisher]に結果の中の出版社を代入
-          let publisher = result[0].items[i]["dc:publisher"];
-          //変数[title]に結果の中のタイトルを代入
-          let itemsId = result[0].items[i]["@id"];
-
-          //タイトルの情報がundefindの場合は「作者（不明）」と表示
-          title = typeof title !== 'undefined' ? title : 'タイトル不明';
-
-          //著者の情報がundefindの場合は「作者不明」と表示
-          creator = typeof creator !== 'undefined' ? creator : '作者不明';
-
-          //出版社の情報がundefindの場合は「出版社不明」と表示
-          publisher = typeof publisher !== 'undefined' ? publisher : '出版社不明';
-
-          //書籍情報の情報がundefindの場合は「書籍情報不明」と表示
-          itemsId = typeof itemsId !== 'undefined' ? itemsId : '書籍情報不明';
 
 
-          //doneHtmlに結果を追加
-          doneHtml += `
-        <li class="lists-item">
-        <div class="list-inner">
-        <p>タイトル：${title}</p>
-        <p>作者：${creator}</p>
-        <p>出版社：${publisher}</p>
-        <a href=${itemsId} target="_blank">書籍情報</a>
-        </div>
-        </li>
-        `;
-        }
 
-        //class[lists]にhtmlを追加
-        $('.lists').prepend(doneHtml);
+  //handleSuccessの定義
+  function handleSuccess(response) {
 
-        //同じ言葉で検索した場合はpageCountを増やす
-        pageCount++;
+    //処理成功時にhtmlを追加するための変数doneHtmlを作成
+    let doneHtml = '';
 
-        //返ってきた情報にresult[0].itemsを得られなかった場合
-      } else {
 
-        //doneHtmlに追加する文
+    //返ってきた情報の中の@graphのみ
+    const result = response['@graph'];
+
+    //返ってきた情報にresult[0].itemsを得られた場合
+    if (result[0].items) {
+
+      //@graphのitemsのindex数を取得する定数を定義
+      const resultItemsLength = result[0].items.length;
+
+
+      //結果を使ったループ処理
+      for (let i = resultItemsLength - 1; i >= 0; i--) {
+
+        //変数[title]に結果の中のタイトルを代入
+        const title = typeof result[0].items[i].title !== 'undefined' ? result[0].items[i].title : 'タイトル不明';
+        //変数[creator]に結果の中の著者を代入
+        const creator = typeof result[0].items[i]["dc:creator"] !== 'undefined' ? result[0].items[i]["dc:creator"] : '作者不明';
+        //変数[publisher]に結果の中の出版社を代入
+        const publisher = typeof result[0].items[i]["dc:publisher"] !== 'undefined' ? result[0].items[i]["dc:publisher"] : '出版社不明';
+        //変数[title]に結果の中のタイトルを代入
+        const itemsId = typeof result[0].items[i]["@id"] !== 'undefined' ? result[0].items[i]["@id"] : '書籍情報不明';
+
+        //doneHtmlに結果を追加
         doneHtml += `
-        <p class="message">検索結果が見つかりませんでした。<br>
-        別のキーワードで検索して下さい。</p>
-        `;
-
-        //一度class[lists]を空にして、doneHtmlを追加
-        $('.lists').empty().prepend(doneHtml);
-
+      <li class="lists-item">
+      <div class="list-inner">
+      <p>タイトル：${title}</p>
+      <p>作者：${creator}</p>
+      <p>出版社：${publisher}</p>
+      <a href=${itemsId} target="_blank">書籍情報</a>
+      </div>
+      </li>
+      `;
       }
+
+      //class[lists]にhtmlを追加
+      $('.lists').prepend(doneHtml);
+
+      //同じ言葉で検索した場合はpageCountを増やす
+      pageCount++;
+
+      //返ってきた情報にresult[0].itemsを得られなかった場合
+    } else {
+
+      //doneHtmlに追加する文
+      doneHtml += `
+      <p class="message">検索結果が見つかりませんでした。<br>
+      別のキーワードで検索して下さい。</p>
+      `;
+
+      //一度class[lists]を空にして、doneHtmlを追加
+      $('.lists').prepend(doneHtml);
+
+    }
+  }; //handleSuccessの終了
+
+
+
+
+  //handleFailureの定義
+  function handleFailure(err) {
+
+    //処理失敗時にhtmlを追加するための変数failHtmlを作成
+    let failHtml = '';
+
+    //返ってきた引数errに含まれるstatusを定数errStatusに代入
+    const errStatus = err.status;
+    console.log(err);
+
+    //返ってきたerrのstatusが0の場合
+    if (errStatus === 0) {
+
+      //failHtmlに追加する文
+      failHtml += `
+          <p class="message">正常に通信できませんでした。<br>
+          インターネットの接続の確認をしてください。</p>
+          `
+
+      //返ってきたerrのstatusが400の場合
+    } else if (errStatus === 400) {
+
+
+      //failHtmlに追加する文
+      failHtml += `
+          <p class="message">検索ワードが有効ではありません。<br>
+          1文字以上で検索してください。</p>
+          `
+
+      //返ってきたerrのstatusが0または400以外の場合
+    } else {
+
+
+      //failHtmlに追加する文
+      failHtml += `
+          <p class="message">予期せぬエラーが発生しました。<br>
+          再読み込みを行ってください。</p>
+          `
     };
 
-    //handleFailureの定義
-    function handleFailure(err) {
-
-      //返ってきた引数errに含まれるstatusを定数errStatusに代入
-      const errStatus = err.status;
-
-      //返ってきたerrのstatusが0の場合
-      if (errStatus === 0) {
-
-        //failHtmlに追加する文
-        failHtml += `
-        <p class="message">正常に通信できませんでした。<br>
-        インターネットの接続の確認をしてください。</p>
-        `
-
-        //返ってきたerrのstatusが400の場合
-      } else if (errStatus === 400) {
+    //一度class[lists]を空にして、failHtmlを追加
+    $('.lists').empty().prepend(failHtml);
 
 
-        //failHtmlに追加する文
-        failHtml += `
-        <p class="message">検索ワードが有効ではありません。<br>
-        1文字以上で検索してください。</p>
-        `
-
-        //返ってきたerrのstatusが0または400以外の場合
-      } else {
+  };//handleFailureの終了
 
 
-        //failHtmlに追加する文
-        failHtml += `
-        <p class="message">予期せぬエラーが発生しました。<br>
-        再読み込みを行ってください。</p>
-        `
-      };
-
-      //一度class[lists]を空にして、failHtmlを追加
-      $('.lists').empty().prepend(failHtml);
-    };
 
 
-  });
 
   //class[reset-btn]を押した際に発生するイベント
   $('.reset-btn').on('click', function () {
@@ -182,3 +186,4 @@ $(function () {
     $('.lists').empty();
   });
 });
+
